@@ -596,7 +596,7 @@
 
         .run-btn {
             padding: 12px 28px;
-            background: linear-gradient(135deg, #1A0DAB, #0D47A1);
+            background: linear-gradient(135deg, #336CC4, #2952B5);
             border: none;
             border-radius: 10px;
             font-size: 0.95rem;
@@ -609,7 +609,7 @@
 
         .run-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(26, 13, 171, 0.3);
+            box-shadow: 0 6px 16px rgba(51, 108, 196, 0.3);
         }
 
         .run-btn:active {
@@ -686,7 +686,7 @@
             align-items: center;
             gap: 6px;
             font-size: 0.95rem;
-            color: #1A0DAB;
+            color: #336CC4;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
@@ -743,7 +743,7 @@
 
             <div class="context-card">
                 <p>
-                    Imagine you are a data scientist at Google trying to test whether changing the shade of blue of a link color would drive more clicks. You predict that a different shade of blue will drive more clicks than the current link color (#1A0DAB).
+                    Imagine you are a data scientist at Google trying to test whether changing the shade of blue of a link color would drive more clicks. You predict that a different shade of blue will drive more clicks than the current link color (#336CC4).
                 </p>
                 <p>
                     You decide to set up an <span class="highlight">A/B test</span> to test your hypothesis! Choose a variant color below and run a 30-day experiment.
@@ -771,18 +771,17 @@
                 <h3>Choose your Variant B color</h3>
                 <div class="selected-color-preview">
                     <span>Selected:</span>
-                    <div class="selected-color-dot" id="selected-color-dot" style="background: #1E3FA6;"></div>
-                    <span id="selected-color-hex">#1E3FA6</span>
+                    <div class="selected-color-dot" id="selected-color-dot" style="background: #2952B5;"></div>
+                    <span id="selected-color-hex">#2952B5</span>
                 </div>
             </div>
             <div class="color-options">
-                <div class="color-option" style="background: #61CDEB;" data-color="#61CDEB" data-ctr="0.028" title="Light Cyan"></div>
-                <div class="color-option" style="background: #47A3E0;" data-color="#47A3E0" data-ctr="0.031" title="Sky Blue"></div>
-                <div class="color-option" style="background: #3B87D2;" data-color="#3B87D2" data-ctr="0.034" title="Medium Blue"></div>
-                <div class="color-option" style="background: #336CC4;" data-color="#336CC4" data-ctr="0.038" title="Blue"></div>
-                <div class="color-option" style="background: #2952B5;" data-color="#2952B5" data-ctr="0.042" title="Royal Blue"></div>
-                <div class="color-option selected" style="background: #1E3FA6;" data-color="#1E3FA6" data-ctr="0.046" title="Dark Blue"></div>
-                <div class="color-option" style="background: #0B24A0;" data-color="#0B24A0" data-ctr="0.050" title="Navy"></div>
+                <div class="color-option" style="background: #61CDEB;" data-color="#61CDEB" data-ctr="0.034" title="Light Cyan"></div>
+                <div class="color-option" style="background: #47A3E0;" data-color="#47A3E0" data-ctr="0.033" title="Sky Blue"></div>
+                <div class="color-option" style="background: #3B87D2;" data-color="#3B87D2" data-ctr="0.036" title="Medium Blue"></div>
+                <div class="color-option selected" style="background: #2952B5;" data-color="#2952B5" data-ctr="0.037" title="Royal Blue"></div>
+                <div class="color-option" style="background: #1E3FA6;" data-color="#1E3FA6" data-ctr="0.055" title="Dark Blue"></div>
+                <div class="color-option" style="background: #0B24A0;" data-color="#0B24A0" data-ctr="0.070" title="Navy"></div>
             </div>
         </div>
 
@@ -802,7 +801,7 @@
                         </div>
                         <span class="search-menu">&#8942;</span>
                     </div>
-                    <a class="search-title" id="link-a" style="color: #1A0DAB;">Bird Rock Coffee Roasters</a>
+                    <a class="search-title" id="link-a" style="color: #336CC4;">Bird Rock Coffee Roasters</a>
                     <div class="search-desc">Bird Rock Coffee Roasters, San Diego California. Roasting Direct Trade and Ethically Sourced Coffee Daily. Third Wave coffee roaster putting fresh award ...</div>
                 </div>
                 <div class="stats-row">
@@ -832,7 +831,7 @@
                         </div>
                         <span class="search-menu">&#8942;</span>
                     </div>
-                    <a class="search-title" id="link-b" style="color: #1E3FA6;">Bird Rock Coffee Roasters</a>
+                    <a class="search-title" id="link-b" style="color: #2952B5;">Bird Rock Coffee Roasters</a>
                     <div class="search-desc">Bird Rock Coffee Roasters, San Diego California. Roasting Direct Trade and Ethically Sourced Coffee Daily. Third Wave coffee roaster putting fresh award ...</div>
                 </div>
                 <div class="stats-row">
@@ -933,8 +932,8 @@
         const controlCTR = 0.035; // 3.5% CTR for control (#1A0DAB)
 
         // Selected variant color and CTR
-        let selectedVariantColor = '#1E3FA6';
-        let selectedVariantCTR = 0.046;
+        let selectedVariantColor = '#2952B5';
+        let selectedVariantCTR = 0.037;
 
         // Initialize color picker
         document.querySelectorAll('.color-option').forEach(option => {
@@ -1199,7 +1198,7 @@
                     } else {
                         winnerBox.className = 'winner-box';
                         winnerTitle.textContent = `Control A wins with ${Math.abs(percentDiff)}% higher CTR`;
-                        winnerDesc.textContent = `The original color (#1A0DAB) outperformed your variant. Sometimes the current design is already optimal!`;
+                        winnerDesc.textContent = `The original color (#336CC4) outperformed your variant. Sometimes the current design is already optimal!`;
                     }
                 } else {
                     sigStatus.textContent = 'No statistically significant difference';
