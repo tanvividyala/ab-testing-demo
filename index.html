@@ -4,8 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A/B Testing Simulator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: "Cooper Md BT";
+            src: url("fonts/CooperMdBT-Medium.ttf") format("truetype");
+            font-weight: 500;
+            font-display: swap;
+        }
+
+        :root {
+            --poppy:   #d85455;
+            --sage:    #91ad94;
+            --cream:   #fbf6e9;
+            --apricot: #f1a97a;
+            --moss:    #60704e;
+            --moss-900: #2f3a26;
+
+            --cream-50:  #fefbf3;
+            --cream-100: #fbf6e9;
+            --cream-200: #f3ecd7;
+            --cream-300: #e6dec3;
+
+            --moss-700: #485636;
+            --moss-500: #60704e;
+            --moss-300: #8a9776;
+
+            --poppy-600: #b8403f;
+            --poppy-500: #d85455;
+            --poppy-200: #f0b5b5;
+
+            --apricot-600: #d98453;
+            --apricot-500: #f1a97a;
+            --apricot-200: #f9d4ba;
+
+            --sage-600: #6f8c73;
+            --sage-500: #91ad94;
+            --sage-200: #c8d6c9;
+
+            --bg:          var(--cream-100);
+            --bg-elevated: var(--cream-50);
+            --bg-sunken:   var(--cream-200);
+
+            --fg:          var(--moss-900);
+            --fg-muted:    var(--moss-700);
+            --fg-subtle:   var(--moss-300);
+
+            --accent:       var(--poppy-500);
+            --accent-hover: var(--poppy-600);
+            --accent-soft:  var(--poppy-200);
+
+            --highlight:      var(--apricot-500);
+            --highlight-soft: var(--apricot-200);
+
+            --success:      var(--sage-600);
+            --success-soft: var(--sage-200);
+
+            --border: var(--cream-300);
+
+            --font-display: "Cooper Md BT", Georgia, serif;
+            --font-sans:    "DM Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            --font-mono:    "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,10 +74,10 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f0;
+            font-family: var(--font-sans);
+            background: var(--bg);
             min-height: 100vh;
-            color: #1a1a1a;
+            color: var(--fg);
             line-height: 1.6;
         }
 
@@ -66,16 +127,17 @@
         }
 
         .header-section h1 {
+            font-family: var(--font-display);
             font-size: 2.2rem;
-            font-weight: 700;
-            color: #1a1a1a;
+            font-weight: 500;
+            color: var(--fg);
             margin-bottom: 24px;
             text-align: center;
         }
 
         .context-card {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 28px 32px;
             margin-bottom: 24px;
@@ -83,7 +145,7 @@
 
         .context-card p {
             font-size: 1.05rem;
-            color: #444;
+            color: var(--fg-muted);
             line-height: 1.7;
             margin-bottom: 16px;
         }
@@ -93,7 +155,7 @@
         }
 
         .highlight {
-            background: linear-gradient(120deg, #e8f0fe 0%, #e8f0fe 100%);
+            background: var(--highlight-soft);
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: 500;
@@ -109,8 +171,8 @@
         }
 
         .setup-card {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -122,23 +184,24 @@
         }
 
         .setup-card h3 {
+            font-family: var(--font-mono);
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #888;
+            color: var(--fg-subtle);
             margin-bottom: 8px;
             font-weight: 600;
         }
 
         .setup-card p {
-            color: #333;
+            color: var(--fg-muted);
             font-size: 0.9rem;
         }
 
         /* Color Picker Section */
         .color-picker-section {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px 28px;
             margin-bottom: 32px;
@@ -155,7 +218,7 @@
         .color-picker-header h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #1a1a1a;
+            color: var(--fg);
         }
 
         .selected-color-preview {
@@ -163,7 +226,7 @@
             align-items: center;
             gap: 8px;
             font-size: 0.9rem;
-            color: #666;
+            color: var(--fg-muted);
         }
 
         .selected-color-dot {
@@ -196,7 +259,7 @@
         }
 
         .color-option.selected {
-            border-color: #1a1a1a;
+            border-color: var(--fg);
             transform: scale(1.1);
         }
 
@@ -222,11 +285,11 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: #ddd;
+            background: var(--border);
         }
 
         .step-divider span {
-            color: #666;
+            color: var(--fg-muted);
             font-size: 0.9rem;
             font-weight: 500;
             white-space: nowrap;
@@ -242,8 +305,8 @@
         }
 
         .test-panel {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -251,8 +314,8 @@
 
         .test-panel.winner {
             animation: celebrate 0.5s ease;
-            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
-            border-color: #4caf50;
+            box-shadow: 0 8px 24px rgba(111, 140, 115, 0.2);
+            border-color: var(--success);
         }
 
         .test-panel.loser {
@@ -260,22 +323,23 @@
         }
 
         .panel-header {
+            font-family: var(--font-mono);
             text-align: center;
             font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #666;
+            color: var(--fg-subtle);
             margin-bottom: 20px;
         }
 
         /* Google Search Result Mockup */
         .search-result {
-            background: #fff;
+            background: var(--bg-elevated);
             border-radius: 12px;
             padding: 16px 20px;
             margin-bottom: 20px;
-            border: 1px solid #f0f0f0;
+            border: 1px solid var(--border);
         }
 
         .search-header {
@@ -288,7 +352,7 @@
         .search-favicon {
             width: 28px;
             height: 28px;
-            background: #e8f0fe;
+            background: var(--bg-sunken);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -302,17 +366,17 @@
 
         .search-site-name {
             font-size: 0.9rem;
-            color: #1a1a1a;
+            color: var(--fg);
             font-weight: 400;
         }
 
         .search-url {
             font-size: 0.8rem;
-            color: #4d5156;
+            color: var(--fg-muted);
         }
 
         .search-menu {
-            color: #70757a;
+            color: var(--fg-subtle);
             font-size: 1.2rem;
             cursor: default;
         }
@@ -332,7 +396,7 @@
 
         .search-desc {
             font-size: 0.9rem;
-            color: #4d5156;
+            color: var(--fg-muted);
             line-height: 1.5;
         }
 
@@ -344,7 +408,7 @@
         }
 
         .stat-box {
-            background: #e8f0e8;
+            background: var(--success-soft);
             border-radius: 10px;
             padding: 16px;
             text-align: center;
@@ -352,22 +416,23 @@
         }
 
         .stat-label {
+            font-family: var(--font-mono);
             font-size: 0.75rem;
-            color: #666;
+            color: var(--fg-subtle);
             margin-bottom: 4px;
         }
 
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--fg);
             transition: all 0.15s ease;
         }
 
         /* Results Section */
         .results-section {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 28px;
             margin-bottom: 24px;
@@ -376,7 +441,7 @@
         }
 
         .results-section.significant {
-            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.15);
+            box-shadow: 0 8px 24px rgba(111, 140, 115, 0.15);
         }
 
         .confidence-header {
@@ -387,9 +452,10 @@
         }
 
         .confidence-header h2 {
+            font-family: var(--font-display);
             font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-weight: 500;
+            color: var(--fg);
         }
 
         .confidence-stats {
@@ -399,24 +465,26 @@
         }
 
         .p-value {
+            font-family: var(--font-mono);
             font-size: 0.9rem;
-            color: #888;
+            color: var(--fg-subtle);
         }
 
         .confidence-percent {
+            font-family: var(--font-mono);
             font-size: 1.3rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--fg);
             transition: color 0.3s ease;
         }
 
         .confidence-percent.high {
-            color: #2e7d32;
+            color: var(--success);
         }
 
         .confidence-bar {
             height: 12px;
-            background: #e5e5e5;
+            background: var(--bg-sunken);
             border-radius: 6px;
             overflow: hidden;
             margin-bottom: 8px;
@@ -425,13 +493,13 @@
 
         .confidence-fill {
             height: 100%;
-            background: #1a2a5e;
+            background: var(--accent);
             border-radius: 6px;
             transition: width 0.3s ease, background 0.3s ease;
         }
 
         .confidence-fill.high {
-            background: linear-gradient(90deg, #1a2a5e, #2e7d32);
+            background: linear-gradient(90deg, var(--accent), var(--success));
             background-size: 200% 100%;
             animation: shimmer 2s linear infinite;
         }
@@ -442,80 +510,81 @@
             top: -4px;
             bottom: -4px;
             width: 2px;
-            background: #4caf50;
+            background: var(--success);
         }
 
         .threshold-label {
+            font-family: var(--font-mono);
             text-align: right;
             font-size: 0.8rem;
-            color: #888;
+            color: var(--fg-subtle);
             margin-bottom: 20px;
         }
 
         .significance-status {
             font-size: 1rem;
-            color: #2e7d32;
+            color: var(--success);
             font-weight: 500;
             margin-bottom: 16px;
             transition: all 0.3s ease;
         }
 
         .significance-status.waiting {
-            color: #888;
+            color: var(--fg-subtle);
         }
 
         /* Winner Box */
         .winner-box {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
+            background: var(--success-soft);
+            border-left: 4px solid var(--success);
             border-radius: 8px;
             padding: 20px 24px;
             transition: all 0.3s ease;
         }
 
         .winner-box.no-winner {
-            background: #f5f5f5;
-            border-left-color: #ccc;
+            background: var(--bg-sunken);
+            border-left-color: var(--border);
         }
 
         .winner-box.inconclusive {
-            background: #fff8e1;
-            border-left-color: #ffc107;
+            background: var(--highlight-soft);
+            border-left-color: var(--highlight);
         }
 
         .winner-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #2e7d32;
+            color: var(--success);
             margin-bottom: 8px;
         }
 
         .winner-box.no-winner .winner-title {
-            color: #666;
+            color: var(--fg-muted);
         }
 
         .winner-box.inconclusive .winner-title {
-            color: #f57c00;
+            color: var(--highlight);
         }
 
         .winner-desc {
             font-size: 0.95rem;
-            color: #2e7d32;
+            color: var(--success);
             line-height: 1.6;
         }
 
         .winner-box.no-winner .winner-desc {
-            color: #888;
+            color: var(--fg-subtle);
         }
 
         .winner-box.inconclusive .winner-desc {
-            color: #e65100;
+            color: var(--apricot-600);
         }
 
         /* Controls Section */
         .controls-section {
-            background: white;
-            border: 1px solid #e0e0e0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px 28px;
             display: flex;
@@ -540,25 +609,26 @@
         }
 
         .days-counter {
+            font-family: var(--font-mono);
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #f0f4f8;
+            background: var(--bg-sunken);
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.9rem;
-            color: #555;
+            color: var(--fg-muted);
             transition: all 0.3s ease;
         }
 
         .days-counter.active {
-            background: #e8f0fe;
-            color: #3256bb;
+            background: var(--accent-soft);
+            color: var(--accent);
         }
 
         .days-counter.complete {
-            background: #e8f5e9;
-            color: #2e7d32;
+            background: var(--success-soft);
+            color: var(--success);
         }
 
         .days-counter svg {
@@ -577,16 +647,16 @@
 
         .sim-label {
             font-size: 0.95rem;
-            color: #666;
+            color: var(--fg-muted);
             font-weight: 500;
         }
 
         .sim-label.running {
-            color: #3256bb;
+            color: var(--accent);
         }
 
         .sim-label.complete {
-            color: #2e7d32;
+            color: var(--success);
         }
 
         .button-group {
@@ -596,7 +666,7 @@
 
         .run-btn {
             padding: 12px 28px;
-            background: linear-gradient(135deg, #336CC4, #2952B5);
+            background: var(--accent);
             border: none;
             border-radius: 10px;
             font-size: 0.95rem;
@@ -609,7 +679,7 @@
 
         .run-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(51, 108, 196, 0.3);
+            box-shadow: 0 6px 16px rgba(216, 84, 85, 0.3);
         }
 
         .run-btn:active {
@@ -625,26 +695,26 @@
 
         .reset-btn {
             padding: 12px 24px;
-            background: white;
-            border: 1px solid #ddd;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             border-radius: 10px;
             font-size: 0.95rem;
             font-weight: 500;
-            color: #333;
+            color: var(--fg-muted);
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
         }
 
         .reset-btn:hover {
-            background: #f5f5f5;
-            border-color: #ccc;
+            background: var(--bg-sunken);
+            border-color: var(--border);
         }
 
         /* Insight callout */
         .insight-callout {
-            background: #fffbeb;
-            border: 1px solid #fcd34d;
+            background: var(--highlight-soft);
+            border: 1px solid var(--highlight);
             border-radius: 12px;
             padding: 16px 20px;
             margin-top: 24px;
@@ -658,12 +728,12 @@
 
         .insight-callout p {
             font-size: 0.95rem;
-            color: #92400e;
+            color: var(--fg);
             margin: 0;
         }
 
         .insight-callout strong {
-            color: #78350f;
+            color: var(--fg);
         }
 
         /* Footer Section */
@@ -675,8 +745,9 @@
         }
 
         .disclaimer {
+            font-family: var(--font-mono);
             font-size: 0.9rem;
-            color: #666;
+            color: var(--fg-muted);
             margin-bottom: 12px;
             line-height: 1.6;
         }
@@ -686,7 +757,7 @@
             align-items: center;
             gap: 6px;
             font-size: 0.95rem;
-            color: #336CC4;
+            color: var(--accent);
             text-decoration: none;
             font-weight: 500;
             transition: all 0.2s ease;
