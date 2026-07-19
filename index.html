@@ -3,13 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A/B Testing Simulator</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Shades of Significance | A/B Testing Simulator</title>
     <style>
         @font-face {
             font-family: "Cooper Md BT";
             src: url("fonts/CooperMdBT-Medium.ttf") format("truetype");
             font-weight: 500;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "DM Sans";
+            src: url("fonts/DMSans-Variable.woff2") format("woff2");
+            font-weight: 300 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "DM Mono";
+            src: url("fonts/DMMono-300.woff2") format("woff2");
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "DM Mono";
+            src: url("fonts/DMMono-400.woff2") format("woff2");
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "DM Mono";
+            src: url("fonts/DMMono-500.woff2") format("woff2");
+            font-weight: 500;
+            font-style: normal;
             font-display: swap;
         }
 
@@ -128,11 +159,21 @@
 
         .header-section h1 {
             font-family: var(--font-display);
-            font-size: 2.6rem;
+            font-size: 3.6rem;
             font-weight: 500;
             color: var(--fg);
-            margin-bottom: 24px;
+            margin-bottom: 8px;
             text-align: center;
+        }
+
+        .header-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: var(--fg-muted);
+            text-align: center;
+            margin-bottom: 24px;
         }
 
         .context-card {
@@ -164,7 +205,7 @@
         /* Setup Cards */
         .setup-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-bottom: 40px;
             animation: fadeInUp 0.5s ease 0.1s backwards;
@@ -191,11 +232,105 @@
             color: var(--fg-subtle);
             margin-bottom: 8px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .setup-card p {
             color: var(--fg-muted);
             font-size: 0.9rem;
+        }
+
+        /* Info icon + tooltip (reusable) */
+        .info-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--fg-subtle);
+            color: var(--bg-elevated);
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: help;
+            flex-shrink: 0;
+        }
+
+        .info-icon:hover,
+        .info-icon:focus-visible {
+            background: var(--accent);
+            outline: none;
+        }
+
+        /* Tooltip bubble: a real child element (not a pseudo-element) so it
+           never collides with other ::before/::after rules on its parent
+           (e.g. the "selected" ring on color swatches) */
+        .tooltip-bubble {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            width: 200px;
+            background: var(--moss-900);
+            color: var(--cream-50);
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            line-height: 1.5;
+            text-align: left;
+            padding: 10px 12px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            z-index: 20;
+        }
+
+        .tooltip-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--moss-900);
+        }
+
+        .info-icon:hover .tooltip-bubble,
+        .info-icon:focus-visible .tooltip-bubble,
+        .color-option:hover .tooltip-bubble,
+        .color-option:focus-visible .tooltip-bubble {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 700px) {
+            .tooltip-bubble {
+                left: auto;
+                right: -8px;
+                transform: translateY(4px);
+            }
+
+            .info-icon:hover .tooltip-bubble,
+            .info-icon:focus-visible .tooltip-bubble,
+            .color-option:hover .tooltip-bubble,
+            .color-option:focus-visible .tooltip-bubble {
+                transform: translateY(0);
+            }
+
+            .tooltip-bubble::after {
+                left: auto;
+                right: 12px;
+                transform: none;
+            }
         }
 
         /* Color Picker Section */
@@ -252,10 +387,33 @@
             border: 3px solid transparent;
             transition: all 0.2s ease;
             position: relative;
+            font-family: var(--font-mono);
         }
 
         .color-option:hover {
             transform: scale(1.1);
+        }
+
+        .color-option:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .color-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .color-option.aa-option {
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .color-option.aa-option .tooltip-bubble {
+            text-align: center;
+            width: 190px;
         }
 
         .color-option.selected {
@@ -429,6 +587,14 @@
             transition: all 0.15s ease;
         }
 
+        .stat-ci {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--fg-subtle);
+            margin-top: 2px;
+            min-height: 1em;
+        }
+
         /* Results Section */
         .results-section {
             background: var(--bg-elevated);
@@ -533,6 +699,131 @@
             color: var(--fg-subtle);
         }
 
+        .sig-caveat {
+            font-size: 0.85rem;
+            color: var(--fg-subtle);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        /* Peeking callout */
+        .peek-callout {
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 16px;
+            display: none;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .peek-callout.visible {
+            display: block;
+        }
+
+        .peek-callout p {
+            font-size: 0.95rem;
+            color: var(--fg);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Run History */
+        .history-section {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-top: 24px;
+            display: none;
+        }
+
+        .history-section.visible {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .history-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--fg);
+            margin-bottom: 6px;
+        }
+
+        .history-hint {
+            font-size: 0.85rem;
+            color: var(--fg-subtle);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .history-table-wrap {
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .history-table th {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--fg-subtle);
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .history-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--fg-muted);
+            white-space: nowrap;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            vertical-align: -2px;
+            margin-right: 6px;
+        }
+
+        .verdict-badge {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        .verdict-badge.win {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+
+        .verdict-badge.inconclusive {
+            background: var(--bg-sunken);
+            color: var(--fg-muted);
+        }
+
+        .verdict-badge.false-positive {
+            background: var(--poppy-200);
+            color: var(--poppy-600);
+        }
+
         /* Winner Box */
         .winner-box {
             background: var(--success-soft);
@@ -588,11 +879,107 @@
             border-radius: 16px;
             padding: 24px 28px;
             display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeInUp 0.5s ease 0.5s backwards;
+        }
+
+        .controls-main {
+            display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 24px;
             flex-wrap: wrap;
-            animation: fadeInUp 0.5s ease 0.5s backwards;
+        }
+
+        /* Day scrubber */
+        .scrubber-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .play-btn {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--fg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .play-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .play-btn:hover:not(:disabled) {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: var(--accent-soft);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .day-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--bg-sunken);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .day-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg-elevated);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+            cursor: pointer;
+        }
+
+        .day-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--bg-elevated);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+            cursor: pointer;
+        }
+
+        .day-slider:disabled {
+            cursor: not-allowed;
+        }
+
+        .day-slider:disabled::-webkit-slider-thumb,
+        .day-slider:disabled::-moz-range-thumb {
+            background: var(--fg-subtle);
+            cursor: not-allowed;
+        }
+
+        .scrubber-endpoints {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--fg-subtle);
+            margin-top: -8px;
         }
 
         .sim-status {
@@ -834,10 +1221,10 @@
             }
 
             .setup-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
 
-            .controls-section {
+            .controls-main {
                 flex-direction: column;
                 text-align: center;
             }
@@ -861,7 +1248,8 @@
 <body>
     <div class="container">
         <div class="header-section">
-            <h1>A/B Testing Simulator</h1>
+            <h1>Shades of Significance</h1>
+            <p class="header-subtitle">COGS 9: Introduction to Data Science</p>
 
             <div class="context-card">
                 <p>
@@ -875,7 +1263,13 @@
 
         <div class="setup-grid">
             <div class="setup-card">
-                <h3>Goal</h3>
+                <h3>
+                    Goal
+                    <span class="info-icon" tabindex="0" aria-label="What is click-through rate?">
+                        i
+                        <span class="tooltip-bubble">Click-through rate (CTR) is the percentage of people who see the link and click it: clicks &divide; visitors. It's the metric this whole experiment is trying to move.</span>
+                    </span>
+                </h3>
                 <p>Improve click-through rate (CTR)</p>
             </div>
             <div class="setup-card">
@@ -884,7 +1278,17 @@
             </div>
             <div class="setup-card">
                 <h3>Test Duration</h3>
-                <p>30 days</p>
+                <p>30 days, fixed in advance. No stopping early, even if results look significant sooner</p>
+            </div>
+            <div class="setup-card">
+                <h3>
+                    Sample Size &amp; Power
+                    <span class="info-icon" tabindex="0" aria-label="What do sample size and power mean?">
+                        i
+                        <span class="tooltip-bubble"><strong>Sample size</strong> is how many visitors the test sees, more visitors means less noise. <strong>Power</strong> is the chance the test detects a real effect if one truly exists, typically targeted at 80%. Low power means real effects can slip through undetected.</span>
+                    </span>
+                </h3>
+                <p>~6,000 visitors (200/day). At a 3.5% baseline CTR, this reliably detects lifts of about 1.3 percentage points or more; smaller true effects will often go undetected</p>
             </div>
         </div>
 
@@ -898,12 +1302,16 @@
                 </div>
             </div>
             <div class="color-options">
-                <div class="color-option" style="background: #61CDEB;" data-color="#61CDEB" data-ctr="0.034" title="Light Cyan"></div>
-                <div class="color-option" style="background: #47A3E0;" data-color="#47A3E0" data-ctr="0.033" title="Sky Blue"></div>
-                <div class="color-option" style="background: #3B87D2;" data-color="#3B87D2" data-ctr="0.036" title="Medium Blue"></div>
-                <div class="color-option selected" style="background: #2952B5;" data-color="#2952B5" data-ctr="0.037" title="Royal Blue"></div>
-                <div class="color-option" style="background: #1E3FA6;" data-color="#1E3FA6" data-ctr="0.055" title="Dark Blue"></div>
-                <div class="color-option" style="background: #0B24A0;" data-color="#0B24A0" data-ctr="0.070" title="Navy"></div>
+                <button type="button" class="color-option" style="background: #61CDEB;" data-color="#61CDEB" title="Light Cyan" aria-label="Light Cyan (#61CDEB)"></button>
+                <button type="button" class="color-option" style="background: #47A3E0;" data-color="#47A3E0" title="Sky Blue" aria-label="Sky Blue (#47A3E0)"></button>
+                <button type="button" class="color-option" style="background: #3B87D2;" data-color="#3B87D2" title="Medium Blue" aria-label="Medium Blue (#3B87D2)"></button>
+                <button type="button" class="color-option selected" style="background: #2952B5;" data-color="#2952B5" title="Royal Blue" aria-label="Royal Blue (#2952B5)"></button>
+                <button type="button" class="color-option" style="background: #1E3FA6;" data-color="#1E3FA6" title="Dark Blue" aria-label="Dark Blue (#1E3FA6)"></button>
+                <button type="button" class="color-option" style="background: #0B24A0;" data-color="#0B24A0" title="Navy" aria-label="Navy (#0B24A0)"></button>
+                <button type="button" class="color-option aa-option" style="background: #336CC4;" data-color="#336CC4" aria-label="A/A test: same color as control (#336CC4). This is the control color, used to test for false positives.">
+                    A/A
+                    <span class="tooltip-bubble">This is the control color. Use it to run an A/A test (no real difference) and check for false positives.</span>
+                </button>
             </div>
         </div>
 
@@ -923,7 +1331,7 @@
                         </div>
                         <span class="search-menu">&#8942;</span>
                     </div>
-                    <a class="search-title" id="link-a" style="color: #336CC4;">Bird Rock Coffee Roasters</a>
+                    <span class="search-title" id="link-a" style="color: #336CC4;">Bird Rock Coffee Roasters</span>
                     <div class="search-desc">Bird Rock Coffee Roasters, San Diego California. Roasting Direct Trade and Ethically Sourced Coffee Daily. Third Wave coffee roaster putting fresh award ...</div>
                 </div>
                 <div class="stats-row">
@@ -938,6 +1346,7 @@
                     <div class="stat-box">
                         <div class="stat-label">CTR</div>
                         <div class="stat-value" id="ctr-a">0%</div>
+                        <div class="stat-ci" id="ci-a"></div>
                     </div>
                 </div>
             </div>
@@ -953,7 +1362,7 @@
                         </div>
                         <span class="search-menu">&#8942;</span>
                     </div>
-                    <a class="search-title" id="link-b" style="color: #2952B5;">Bird Rock Coffee Roasters</a>
+                    <span class="search-title" id="link-b" style="color: #2952B5;">Bird Rock Coffee Roasters</span>
                     <div class="search-desc">Bird Rock Coffee Roasters, San Diego California. Roasting Direct Trade and Ethically Sourced Coffee Daily. Third Wave coffee roaster putting fresh award ...</div>
                 </div>
                 <div class="stats-row">
@@ -968,6 +1377,7 @@
                     <div class="stat-box">
                         <div class="stat-label">CTR</div>
                         <div class="stat-value" id="ctr-b">0%</div>
+                        <div class="stat-ci" id="ci-b"></div>
                     </div>
                 </div>
             </div>
@@ -975,7 +1385,7 @@
 
         <div class="results-section" id="results-section">
             <div class="confidence-header">
-                <h2>Statistical confidence</h2>
+                <h2>Significance (1 &minus; p)</h2>
                 <div class="confidence-stats">
                     <span class="p-value" id="p-value">p = -</span>
                     <span class="confidence-percent" id="confidence-percent">0%</span>
@@ -985,7 +1395,11 @@
                 <div class="confidence-fill" id="confidence-fill" style="width: 0%;"></div>
                 <div class="threshold-marker"></div>
             </div>
-            <div class="threshold-label">95% significance threshold</div>
+            <div class="threshold-label">95% significance threshold (p &lt; 0.05)</div>
+
+            <p class="sig-caveat">
+                Careful: 1 &minus; p is <em>not</em> the probability that B beats A. The p-value only measures how surprising this data would be <em>if the two colors truly performed identically</em>. Crossing 95% means "this would be unusual under no true difference," nothing more.
+            </p>
 
             <div class="significance-status waiting" id="significance-status">
                 Waiting for data...
@@ -997,43 +1411,88 @@
             </div>
 
             <div class="insight-callout" id="insight-callout">
-                <p><strong>Key insight:</strong> Even though both shades of blue may look almost identical, tiny changes in color can have a massive impact on user behavior at scale. This is why A/B testing is so powerful!</p>
+                <p id="insight-text"><strong>Key insight:</strong> Even though both shades of blue may look almost identical, tiny changes in color can have a massive impact on user behavior at scale. This is why A/B testing is so powerful!</p>
+            </div>
+
+            <div class="peek-callout" id="peek-callout">
+                <p id="peek-text"></p>
             </div>
         </div>
 
         <div class="controls-section">
-            <div class="sim-status">
-                <div class="sim-info">
-                    <div class="days-counter" id="days-counter">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>Day</span>
-                        <span class="days-value" id="days-value">0</span>
-                        <span>/ 30</span>
-                    </div>
-                </div>
-                <span class="sim-label" id="sim-label">Ready to simulate</span>
+            <div class="scrubber-row">
+                <button type="button" class="play-btn" id="play-btn" onclick="toggleAutoplay()" disabled aria-label="Play">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <input type="range" class="day-slider" id="day-slider" min="0" max="30" value="0" step="1" disabled
+                       oninput="onSliderInput(this.value)" aria-label="Scrub to a specific day of the experiment">
+            </div>
+            <div class="scrubber-endpoints">
+                <span>Day 0</span>
+                <span>Drag to review any day, or press play to autoplay</span>
+                <span>Day 30</span>
             </div>
 
-            <div class="button-group">
-                <button class="run-btn" id="run-btn" onclick="runSimulation()">Run Simulation</button>
-                <button class="reset-btn" onclick="resetExperiment()">Reset</button>
+            <div class="controls-main">
+                <div class="sim-status">
+                    <div class="sim-info">
+                        <div class="days-counter" id="days-counter">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>Day</span>
+                            <span class="days-value" id="days-value">0</span>
+                            <span>/ 30</span>
+                        </div>
+                    </div>
+                    <span class="sim-label" id="sim-label">Ready to simulate</span>
+                </div>
+
+                <div class="button-group">
+                    <button class="run-btn" id="run-btn" onclick="runSimulation()">Run Simulation</button>
+                    <button class="reset-btn" onclick="resetExperiment()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section" id="history-section">
+            <h2>Run history</h2>
+            <p class="history-hint">
+                Results vary run to run because every simulated visitor is random, just like real traffic. Try running the A/A test (identical colors) several times: at a 95% threshold, about 1 in 20 A/A runs will come up "significant" purely by chance. That is what a false positive looks like.
+            </p>
+            <div class="history-table-wrap">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Run</th>
+                            <th>Variant B</th>
+                            <th>CTR A</th>
+                            <th>CTR B</th>
+                            <th>Lift</th>
+                            <th>p-value</th>
+                            <th>Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
             </div>
         </div>
 
         <div class="footer-section">
             <p class="disclaimer">
-                <strong>Note:</strong> This simulator uses dummy data for demonstration purposes only. The click-through rates are simulated to illustrate how A/B testing works.
+                <strong>Note:</strong> This simulator uses dummy data for demonstration purposes only. The click-through rates are simulated to illustrate how A/B testing works. Every run draws fresh random visitors, so your results (and your classmates') will differ from run to run. That variability is part of the lesson.
             </p>
             <button class="read-more-toggle" id="read-more-toggle" aria-expanded="false" onclick="toggleReadMore()">
-                Read more about the original test
+                Read more about the original test &amp; the methodology
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
             <div class="read-more-content" id="read-more-content">
                 <p>In 2009, Google famously tested 41 shades of blue and found that a slightly more purple shade generated an extra $200 million in annual revenue. The original test was actually a multivariate test across multiple elements, not a simple A/B test. This simulator is a simplified demonstration for educational purposes.</p>
+                <p><strong>Why a two-tailed test?</strong> Our hypothesis says the variant will get <em>more</em> clicks, which sounds one-directional. But this simulator still uses a two-tailed test, and that is the standard choice in industry: before running the experiment you genuinely don't know which direction the effect will go, and a variant that performs <em>worse</em> is just as important to detect as one that performs better. One-tailed tests are only appropriate when a difference in the "wrong" direction would be treated exactly the same as no difference at all, which is rarely true in product decisions.</p>
+                <p><strong>Statistical vs. practical significance.</strong> With enough traffic, even a microscopic difference will eventually become "statistically significant." Significance only tells you an effect is probably real, not that it is big enough to matter. In practice teams decide up front on a minimum effect worth acting on (say, a 0.5 percentage-point lift) and weigh it against the cost of the change. Look at the size of the lift and its confidence interval, not just the p-value.</p>
+                <p><strong>Sample size and power.</strong> The 30-day duration and 200 visitors/day were not arbitrary: real experiments compute the required sample size <em>before</em> launching, based on the baseline rate and the smallest effect they care about. With ~3,000 visitors per arm and a 3.5% baseline CTR, this test has roughly 80% power to detect a lift of about 1.3 percentage points. Smaller true effects will usually produce an "inconclusive" result, not because they don't exist, but because the test is underpowered for them.</p>
                 <a href="https://medium.com/@whystudying/multivariate-test-googles-41-shades-of-blue-846d2c5781a8" target="_blank" rel="noopener noreferrer" class="read-more-link">
                     Read the full article
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1045,140 +1504,344 @@
     </div>
 
     <script>
-        let data = {
-            a: { views: 0, clicks: 0 },
-            b: { views: 0, clicks: 0 }
-        };
+        const ZERO_SNAPSHOT = { a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } };
+        let data = { a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } };
 
-        let isRunning = false;
-        let simulationInterval = null;
-        let simulatedDays = 0;
+        // The full 30-day dataset is generated in one shot when a run
+        // starts (dailySnapshots[d] = cumulative totals after day d), so
+        // scrubbing back and forth always replays the same numbers instead
+        // of drawing fresh randomness each time.
+        let dailySnapshots = null;
+        let currentDay = 0;
+        let isPlaying = false;
+        let playInterval = null;
+        let finalizedThisRun = false;
+
         const totalDays = 30;
         const usersPerDay = 200;
 
-        // Control CTR (fixed)
-        const controlCTR = 0.035; // 3.5% CTR for control (#1A0DAB)
+        const CONTROL_COLOR = '#336CC4';
+        const controlCTR = 0.035; // 3.5% CTR for control (#336CC4)
 
-        // Selected variant color and CTR
+        // True variant CTRs live here (not in data- attributes) so the answer
+        // isn't one View Source away. The A/A option is identical to control.
+        const VARIANT_CTRS = {
+            '#61CDEB': 0.034,
+            '#47A3E0': 0.033,
+            '#3B87D2': 0.036,
+            '#2952B5': 0.037,
+            '#1E3FA6': 0.055,
+            '#0B24A0': 0.070,
+            [CONTROL_COLOR]: controlCTR
+        };
+
+        // Each run adds a small random offset (+/- 0.15pp) to the variant's
+        // true CTR so no color has a fixed, memorizable outcome. The A/A
+        // option is never jittered: its null effect must stay exactly null.
+        const CTR_JITTER = 0.0015;
+
         let selectedVariantColor = '#2952B5';
-        let selectedVariantCTR = 0.037;
+        let isAATest = false;
+        let trueVariantCTR = VARIANT_CTRS[selectedVariantColor];
+
+        let firstSignificantDay = null;
+        const runHistory = [];
+
+        const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+        const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
 
         // Initialize color picker
         document.querySelectorAll('.color-option').forEach(option => {
             option.addEventListener('click', function() {
-                if (isRunning) return;
+                if (isPlaying) return;
 
                 document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
 
                 selectedVariantColor = this.dataset.color;
-                selectedVariantCTR = parseFloat(this.dataset.ctr);
+                isAATest = selectedVariantColor === CONTROL_COLOR;
 
                 // Update preview
                 document.getElementById('selected-color-dot').style.background = selectedVariantColor;
-                document.getElementById('selected-color-hex').textContent = selectedVariantColor;
+                document.getElementById('selected-color-hex').textContent =
+                    isAATest ? selectedVariantColor + ' (A/A)' : selectedVariantColor;
 
                 // Update variant link color
                 document.getElementById('link-b').style.color = selectedVariantColor;
             });
         });
 
+        function setColorPickerEnabled(enabled) {
+            document.querySelectorAll('.color-option').forEach(o => o.disabled = !enabled);
+        }
+
+        // Generates the entire 30-day random dataset up front, so playback
+        // (autoplay or manual scrubbing) is just replaying known numbers.
+        function generateDailySnapshots() {
+            const snapshots = [{ a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } }];
+            const running = { a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } };
+
+            for (let day = 1; day <= totalDays; day++) {
+                for (let i = 0; i < usersPerDay; i++) {
+                    const variant = Math.random() < 0.5 ? 'a' : 'b';
+                    running[variant].views++;
+
+                    const ctr = variant === 'a' ? controlCTR : trueVariantCTR;
+                    if (Math.random() < ctr) {
+                        running[variant].clicks++;
+                    }
+                }
+                snapshots.push({ a: { ...running.a }, b: { ...running.b } });
+            }
+
+            return snapshots;
+        }
+
         function runSimulation() {
-            if (isRunning) return;
+            if (isPlaying) return;
 
-            // Reset data
-            data = { a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } };
-            simulatedDays = 0;
-            updateDisplay();
+            // Fix this run's true variant CTR up front (base + jitter).
+            // A/A stays exactly equal to control: any "significant" result
+            // it produces is a genuine false positive.
+            if (isAATest) {
+                trueVariantCTR = controlCTR;
+            } else {
+                const base = VARIANT_CTRS[selectedVariantColor];
+                trueVariantCTR = base + (Math.random() * 2 - 1) * CTR_JITTER;
+            }
 
-            isRunning = true;
-            document.getElementById('run-btn').disabled = true;
-            document.getElementById('sim-label').classList.add('running');
-            document.getElementById('days-counter').classList.add('active');
+            dailySnapshots = generateDailySnapshots();
+            finalizedThisRun = false;
+
+            // Find the first day (if any) this run crosses 95%, to teach
+            // the "peeking" problem once the run completes
+            firstSignificantDay = null;
+            for (let day = 1; day <= totalDays; day++) {
+                if (calculateConfidence(dailySnapshots[day]) >= 95) {
+                    firstSignificantDay = day;
+                    break;
+                }
+            }
+
+            document.getElementById('sim-label').classList.remove('complete');
             document.getElementById('days-counter').classList.remove('complete');
             document.getElementById('insight-callout').classList.remove('visible');
+            document.getElementById('peek-callout').classList.remove('visible');
             document.getElementById('panel-a').classList.remove('winner', 'loser');
             document.getElementById('panel-b').classList.remove('winner', 'loser');
             document.getElementById('results-section').classList.remove('significant');
 
-            // Disable color picker during simulation
-            document.querySelectorAll('.color-option').forEach(o => o.style.pointerEvents = 'none');
+            document.getElementById('play-btn').disabled = false;
+            document.getElementById('day-slider').disabled = false;
 
-            simulationInterval = setInterval(() => {
-                simulateDay();
+            setCurrentDay(0);
+            startAutoplay();
+        }
 
-                if (simulatedDays >= totalDays) {
-                    stopSimulation();
+        function setCurrentDay(day) {
+            currentDay = Math.max(0, Math.min(totalDays, day));
+            data = dailySnapshots ? dailySnapshots[currentDay] : ZERO_SNAPSHOT;
+
+            const slider = document.getElementById('day-slider');
+            slider.value = currentDay;
+            const pct = totalDays ? (currentDay / totalDays) * 100 : 0;
+            slider.style.background =
+                `linear-gradient(to right, var(--accent) ${pct}%, var(--bg-sunken) ${pct}%)`;
+
+            updateDisplay();
+
+            if (dailySnapshots && currentDay === totalDays && !finalizedThisRun) {
+                finalizedThisRun = true;
+                finalizeRun();
+            }
+        }
+
+        function onSliderInput(value) {
+            if (!dailySnapshots) return;
+            if (isPlaying) pauseAutoplay();
+            setCurrentDay(parseInt(value, 10));
+        }
+
+        function toggleAutoplay() {
+            if (!dailySnapshots) return;
+            if (isPlaying) {
+                pauseAutoplay();
+            } else {
+                startAutoplay();
+            }
+        }
+
+        function startAutoplay() {
+            if (isPlaying || !dailySnapshots) return;
+
+            // Replaying after reaching the end starts over from day 0
+            if (currentDay >= totalDays) {
+                setCurrentDay(0);
+            }
+
+            isPlaying = true;
+            document.getElementById('play-btn').innerHTML = PAUSE_ICON;
+            document.getElementById('play-btn').setAttribute('aria-label', 'Pause');
+            document.getElementById('run-btn').disabled = true;
+            document.getElementById('sim-label').textContent = 'Running experiment...';
+            document.getElementById('sim-label').classList.add('running');
+            document.getElementById('days-counter').classList.add('active');
+            setColorPickerEnabled(false);
+
+            playInterval = setInterval(() => {
+                setCurrentDay(currentDay + 1);
+
+                const daysCounter = document.getElementById('days-counter');
+                daysCounter.classList.add('tick');
+                setTimeout(() => daysCounter.classList.remove('tick'), 300);
+
+                if (currentDay >= totalDays) {
+                    pauseAutoplay();
                 }
             }, 100); // Each day takes 100ms
         }
 
-        function simulateDay() {
-            simulatedDays++;
+        function pauseAutoplay() {
+            if (!isPlaying) return;
+            isPlaying = false;
+            clearInterval(playInterval);
 
-            // Simulate users for this day
-            for (let i = 0; i < usersPerDay; i++) {
-                // Randomly assign to A or B
-                const variant = Math.random() < 0.5 ? 'a' : 'b';
-                data[variant].views++;
-
-                // Simulate click based on CTR
-                const ctr = variant === 'a' ? controlCTR : selectedVariantCTR;
-                if (Math.random() < ctr) {
-                    data[variant].clicks++;
-                }
-            }
-
-            // Tick animation
-            const daysCounter = document.getElementById('days-counter');
-            daysCounter.classList.add('tick');
-            setTimeout(() => daysCounter.classList.remove('tick'), 300);
-
-            updateDisplay();
-        }
-
-        function stopSimulation() {
-            isRunning = false;
-            clearInterval(simulationInterval);
+            document.getElementById('play-btn').innerHTML = PLAY_ICON;
+            document.getElementById('play-btn').setAttribute('aria-label', 'Play');
             document.getElementById('run-btn').disabled = false;
             document.getElementById('sim-label').classList.remove('running');
             document.getElementById('days-counter').classList.remove('active');
-            document.getElementById('days-counter').classList.add('complete');
+            setColorPickerEnabled(true);
 
-            // Re-enable color picker
-            document.querySelectorAll('.color-option').forEach(o => o.style.pointerEvents = 'auto');
-
-            const simLabel = document.getElementById('sim-label');
-            simLabel.textContent = 'Experiment complete!';
-            simLabel.classList.add('complete');
-
-            document.getElementById('insight-callout').classList.add('visible');
-
-            // Determine winner
-            const ctrA = calculateCTR('a');
-            const ctrB = calculateCTR('b');
-            const confidence = calculateConfidence();
-
-            if (confidence >= 95) {
-                document.getElementById('results-section').classList.add('significant');
-                if (ctrB > ctrA) {
-                    document.getElementById('panel-b').classList.add('winner');
-                    document.getElementById('panel-a').classList.add('loser');
-                } else {
-                    document.getElementById('panel-a').classList.add('winner');
-                    document.getElementById('panel-b').classList.add('loser');
-                }
+            if (currentDay >= totalDays) {
+                document.getElementById('days-counter').classList.add('complete');
+                document.getElementById('sim-label').textContent = 'Experiment complete!';
+                document.getElementById('sim-label').classList.add('complete');
             }
         }
 
-        function resetExperiment() {
-            if (isRunning) {
-                isRunning = false;
-                clearInterval(simulationInterval);
+        function finalizeRun() {
+            document.getElementById('days-counter').classList.add('complete');
+            document.getElementById('sim-label').textContent = 'Experiment complete!';
+            document.getElementById('sim-label').classList.add('complete');
+
+            const ctrA = calculateCTR('a');
+            const ctrB = calculateCTR('b');
+            const pValue = calculatePValue();
+            const confidence = calculateConfidence();
+            const significant = confidence >= 95;
+
+            if (significant) {
+                document.getElementById('results-section').classList.add('significant');
+                // For an A/A test there is no true winner to crown
+                if (!isAATest) {
+                    if (ctrB > ctrA) {
+                        document.getElementById('panel-b').classList.add('winner');
+                        document.getElementById('panel-a').classList.add('loser');
+                    } else {
+                        document.getElementById('panel-a').classList.add('winner');
+                        document.getElementById('panel-b').classList.add('loser');
+                    }
+                }
             }
 
+            showInsight(significant, ctrA, ctrB);
+            showPeekingLesson(significant);
+            recordRun(ctrA, ctrB, pValue, significant);
+        }
+
+        function showInsight(significant, ctrA, ctrB) {
+            const insightText = document.getElementById('insight-text');
+
+            if (isAATest && significant) {
+                insightText.innerHTML = '<strong>Key insight:</strong> This run is a <strong>false positive</strong>. Both versions used the exact same color, so the "significant" difference is pure chance. A 95% threshold means roughly 1 in 20 A/A tests will do this. This is why real teams run A/A tests to sanity-check their experiment pipeline.';
+            } else if (isAATest) {
+                insightText.innerHTML = '<strong>Key insight:</strong> Both versions used the exact same color, and the test correctly found no significant difference. But don’t stop here: run the A/A test several more times. At a 95% threshold, about 1 in 20 runs will come up "significant" by pure chance.';
+            } else if (significant) {
+                insightText.innerHTML = '<strong>Key insight:</strong> Even though both shades of blue may look almost identical, tiny changes in color can have a measurable impact on user behavior at scale. But statistical significance alone doesn’t mean the change is worth shipping: check whether the size of the lift is practically meaningful too.';
+            } else {
+                insightText.innerHTML = '<strong>Key insight:</strong> An inconclusive result doesn’t prove the colors perform identically. It may just mean the true difference is too small for this sample size to detect. Detecting a lift smaller than ~1.3 percentage points would need more traffic or a longer test.';
+            }
+
+            document.getElementById('insight-callout').classList.add('visible');
+        }
+
+        function showPeekingLesson(significant) {
+            const peekCallout = document.getElementById('peek-callout');
+            const peekText = document.getElementById('peek-text');
+
+            if (firstSignificantDay !== null && firstSignificantDay < totalDays) {
+                if (!significant) {
+                    peekText.innerHTML = '<strong>The peeking trap:</strong> This test first crossed 95% on day ' + firstSignificantDay + ', but ended <em>not</em> significant. If you had stopped the moment it looked significant, you would have declared a winner that isn’t there. Checking results repeatedly and stopping at the first "significant" reading inflates the false-positive rate far above 5%, which is why the 30-day duration is fixed in advance.';
+                } else {
+                    peekText.innerHTML = '<strong>About peeking:</strong> This test first crossed 95% on day ' + firstSignificantDay + ' and happened to stay significant through day 30. But stopping early the moment a test looks significant is still a mistake: significance fluctuates day to day, and repeatedly checking-and-stopping inflates the false-positive rate far above 5%. Always run to the pre-committed sample size.';
+                }
+                peekCallout.classList.add('visible');
+            }
+        }
+
+        function recordRun(ctrA, ctrB, pValue, significant) {
+            runHistory.push({
+                color: selectedVariantColor,
+                isAA: isAATest,
+                ctrA: ctrA,
+                ctrB: ctrB,
+                pValue: pValue,
+                significant: significant,
+                firstSignificantDay: firstSignificantDay
+            });
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const body = document.getElementById('history-body');
+            body.innerHTML = '';
+
+            runHistory.forEach((run, i) => {
+                const row = document.createElement('tr');
+
+                let verdict, badgeClass;
+                if (run.significant && run.isAA) {
+                    verdict = 'False positive!';
+                    badgeClass = 'false-positive';
+                } else if (run.significant) {
+                    verdict = run.ctrB > run.ctrA ? 'B wins' : 'A wins';
+                    badgeClass = 'win';
+                } else {
+                    verdict = 'Inconclusive';
+                    badgeClass = 'inconclusive';
+                }
+
+                const lift = run.ctrB - run.ctrA;
+                const liftStr = (lift >= 0 ? '+' : '') + lift.toFixed(2) + ' pp';
+                const variantLabel = run.isAA ? 'A/A (same color)' : run.color;
+
+                row.innerHTML =
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td><span class="history-swatch" style="background:' + run.color + '"></span>' + variantLabel + '</td>' +
+                    '<td>' + run.ctrA.toFixed(2) + '%</td>' +
+                    '<td>' + run.ctrB.toFixed(2) + '%</td>' +
+                    '<td>' + liftStr + '</td>' +
+                    '<td>' + run.pValue.toFixed(4) + '</td>' +
+                    '<td><span class="verdict-badge ' + badgeClass + '">' + verdict + '</span></td>';
+
+                body.appendChild(row);
+            });
+
+            document.getElementById('history-section').classList.add('visible');
+        }
+
+        function resetExperiment() {
+            if (isPlaying) {
+                isPlaying = false;
+                clearInterval(playInterval);
+            }
+
+            dailySnapshots = null;
+            currentDay = 0;
             data = { a: { views: 0, clicks: 0 }, b: { views: 0, clicks: 0 } };
-            simulatedDays = 0;
+            firstSignificantDay = null;
+            finalizedThisRun = false;
 
             document.getElementById('run-btn').disabled = false;
             document.getElementById('sim-label').textContent = 'Ready to simulate';
@@ -1186,30 +1849,58 @@
             document.getElementById('days-counter').classList.remove('active', 'complete');
             document.getElementById('days-value').textContent = '0';
             document.getElementById('insight-callout').classList.remove('visible');
+            document.getElementById('peek-callout').classList.remove('visible');
             document.getElementById('panel-a').classList.remove('winner', 'loser');
             document.getElementById('panel-b').classList.remove('winner', 'loser');
             document.getElementById('results-section').classList.remove('significant');
 
-            // Re-enable color picker
-            document.querySelectorAll('.color-option').forEach(o => o.style.pointerEvents = 'auto');
+            const slider = document.getElementById('day-slider');
+            slider.value = 0;
+            slider.disabled = true;
+            slider.style.background = '';
+
+            const playBtn = document.getElementById('play-btn');
+            playBtn.disabled = true;
+            playBtn.innerHTML = PLAY_ICON;
+            playBtn.setAttribute('aria-label', 'Play');
+
+            setColorPickerEnabled(true);
 
             updateDisplay();
         }
 
-        function calculateCTR(variant) {
-            if (data[variant].views === 0) return 0;
-            return (data[variant].clicks / data[variant].views) * 100;
+        function calculateCTR(variant, snap = data) {
+            if (snap[variant].views === 0) return 0;
+            return (snap[variant].clicks / snap[variant].views) * 100;
         }
 
-        function calculatePValue() {
-            const n1 = data.a.views;
-            const n2 = data.b.views;
-            const p1 = data.a.views > 0 ? data.a.clicks / data.a.views : 0;
-            const p2 = data.b.views > 0 ? data.b.clicks / data.b.views : 0;
+        // 95% Wald confidence interval for a variant's CTR, in percent
+        function calculateCI(variant, snap = data) {
+            const n = snap[variant].views;
+            if (n < 30) return null;
+            const p = snap[variant].clicks / n;
+            const margin = 1.96 * Math.sqrt(p * (1 - p) / n);
+            return {
+                low: Math.max(0, (p - margin) * 100),
+                high: Math.min(100, (p + margin) * 100)
+            };
+        }
+
+        function formatCI(variant, snap = data) {
+            const ci = calculateCI(variant, snap);
+            if (!ci) return '';
+            return '95% CI: ' + ci.low.toFixed(1) + '–' + ci.high.toFixed(1) + '%';
+        }
+
+        function calculatePValue(snap = data) {
+            const n1 = snap.a.views;
+            const n2 = snap.b.views;
+            const p1 = snap.a.views > 0 ? snap.a.clicks / snap.a.views : 0;
+            const p2 = snap.b.views > 0 ? snap.b.clicks / snap.b.views : 0;
 
             if (n1 < 5 || n2 < 5) return 1;
 
-            const p = (data.a.clicks + data.b.clicks) / (n1 + n2);
+            const p = (snap.a.clicks + snap.b.clicks) / (n1 + n2);
             const se = Math.sqrt(p * (1 - p) * (1/n1 + 1/n2));
 
             if (se === 0) return 1;
@@ -1238,8 +1929,8 @@
             return 0.5 * (1.0 + sign * y);
         }
 
-        function calculateConfidence() {
-            const pValue = calculatePValue();
+        function calculateConfidence(snap = data) {
+            const pValue = calculatePValue(snap);
             return Math.min(99.99, (1 - pValue) * 100);
         }
 
@@ -1256,11 +1947,14 @@
             document.getElementById('ctr-a').textContent = ctrA.toFixed(1) + '%';
             document.getElementById('ctr-b').textContent = ctrB.toFixed(1) + '%';
 
+            document.getElementById('ci-a').textContent = formatCI('a');
+            document.getElementById('ci-b').textContent = formatCI('b');
+
             // Update days
-            document.getElementById('days-value').textContent = simulatedDays;
+            document.getElementById('days-value').textContent = currentDay;
 
             // Update simulation label
-            if (isRunning) {
+            if (isPlaying) {
                 document.getElementById('sim-label').textContent = `Running experiment...`;
             }
 
@@ -1302,38 +1996,47 @@
                 winnerBox.className = 'winner-box no-winner';
                 winnerTitle.textContent = 'Choose a variant color and run the simulation';
                 winnerDesc.textContent = 'Select a shade of blue for Variant B, then click "Run Simulation" to start a 30-day experiment.';
-            } else if (simulatedDays < totalDays) {
-                sigStatus.textContent = confidence >= 95 ? 'Statistically significant!' : 'Not yet statistically significant';
+            } else if (currentDay < totalDays) {
+                sigStatus.textContent = confidence >= 95 ? 'Above 95% right now, but no peeking! The test runs its full 30 days' : 'Not yet statistically significant';
                 sigStatus.className = confidence >= 95 ? 'significance-status' : 'significance-status waiting';
 
                 const diff = Math.abs(ctrB - ctrA);
                 const leader = ctrB > ctrA ? 'B' : 'A';
                 winnerBox.className = 'winner-box no-winner';
-                winnerTitle.textContent = `Day ${simulatedDays}: Variant ${leader} is ahead`;
-                winnerDesc.textContent = `Current difference: ${diff.toFixed(2)}%. Experiment continues until day 30.`;
+                winnerTitle.textContent = `Day ${currentDay}: Variant ${leader} is ahead`;
+                winnerDesc.textContent = `Current difference: ${diff.toFixed(2)} percentage points. The experiment continues until day 30. Stopping the moment a test looks significant ("peeking") inflates false positives.`;
             } else {
                 // Experiment complete
+                const absLift = Math.abs(ctrB - ctrA);
+                const relLift = ctrA > 0 ? Math.abs((ctrB - ctrA) / ctrA * 100) : 0;
+
                 if (confidence >= 95) {
                     sigStatus.textContent = 'Statistically significant result!';
                     sigStatus.className = 'significance-status';
 
-                    const percentDiff = ((ctrB - ctrA) / ctrA * 100).toFixed(1);
-
-                    if (ctrB > ctrA) {
+                    if (isAATest) {
+                        winnerBox.className = 'winner-box inconclusive';
+                        winnerTitle.textContent = 'Significant... but it\'s a false positive!';
+                        winnerDesc.textContent = `Both versions used the exact same color (${CONTROL_COLOR}), so there is no true difference, yet the test still crossed the 95% threshold. Pure chance did that. At a 95% threshold, roughly 1 in 20 A/A tests will produce a "significant" result. Run it a few more times and watch the history table below.`;
+                    } else if (ctrB > ctrA) {
                         winnerBox.className = 'winner-box';
-                        winnerTitle.textContent = `Variant B wins with ${percentDiff}% higher CTR`;
-                        winnerDesc.textContent = `Your chosen color (${selectedVariantColor}) outperformed the control. This matches Google's finding: small color changes can significantly impact user behavior!`;
+                        winnerTitle.textContent = `Variant B wins: +${absLift.toFixed(2)} pp CTR (${relLift.toFixed(1)}% relative lift)`;
+                        winnerDesc.textContent = `Your chosen color (${selectedVariantColor}) outperformed the control (${ctrB.toFixed(2)}% vs ${ctrA.toFixed(2)}%). This matches Google's finding: small color changes can measurably impact behavior. Whether the lift is worth shipping is a separate, practical question; significance alone doesn't decide that.`;
                     } else {
                         winnerBox.className = 'winner-box';
-                        winnerTitle.textContent = `Control A wins with ${Math.abs(percentDiff)}% higher CTR`;
-                        winnerDesc.textContent = `The original color (#336CC4) outperformed your variant. Sometimes the current design is already optimal!`;
+                        winnerTitle.textContent = `Control A wins: +${absLift.toFixed(2)} pp CTR (${relLift.toFixed(1)}% relative lift)`;
+                        winnerDesc.textContent = `The original color (${CONTROL_COLOR}) outperformed your variant (${ctrA.toFixed(2)}% vs ${ctrB.toFixed(2)}%). Sometimes the current design is already the better one: a "losing" test that stops a bad change from shipping is still a successful test!`;
                     }
                 } else {
                     sigStatus.textContent = 'No statistically significant difference';
                     sigStatus.className = 'significance-status waiting';
                     winnerBox.className = 'winner-box inconclusive';
                     winnerTitle.textContent = 'Inconclusive results';
-                    winnerDesc.textContent = `After 30 days, we cannot confidently say one color performs better than the other. The difference of ${Math.abs(ctrB - ctrA).toFixed(2)}% may be due to random chance. Try a different color or run the test again!`;
+                    if (isAATest) {
+                        winnerDesc.textContent = `Both versions used the exact same color, and the test correctly found no significant difference (observed gap: ${absLift.toFixed(2)} pp, just noise). This is the expected A/A outcome, but not a guaranteed one. Run it again a few times to hunt for a false positive.`;
+                    } else {
+                        winnerDesc.textContent = `After 30 days, we cannot confidently say one color performs better than the other. The observed difference of ${absLift.toFixed(2)} pp may be due to random chance, or a true effect too small for ~6,000 visitors to detect. Try a different color or run the test again!`;
+                    }
                 }
             }
         }

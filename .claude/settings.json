@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0 Safari/537.36\" \"https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@300;400;500&display=swap\")",
+      "Bash(node -e \"try{require.resolve\\('playwright'\\);console.log\\('playwright ok'\\)}catch\\(e\\){console.log\\('no playwright'\\)}\")",
+      "Bash(npm ls *)",
+      "Bash(node -e \"require\\('playwright'\\);console.log\\('playwright ok'\\)\")",
+      "Bash(node drive.js)",
+      "Bash(node verify2.js)",
+      "Bash(node -e ' *)",
+      "Bash(node verify3.js)",
+      "Bash(node verify4.js)"
+    ]
+  }
+}
